@@ -4,7 +4,6 @@ from groq import Groq
 # -------------------- PAGE CONFIG --------------------
 st.set_page_config(
     page_title="AI Organ Donation Chatbot",
-    page_icon="🫀",
     layout="centered"
 )
 

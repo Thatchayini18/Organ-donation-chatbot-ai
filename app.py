@@ -15,7 +15,7 @@ with open("project_knowledge.txt", "r") as file:
     project_info = file.read()
 
 # -------------------- UI HEADER --------------------
-st.title("🫀 AI-Powered Organ Donation Assistant")
+st.title("AI-Powered Organ Donation Assistant")
 st.caption("24×7 Intelligent Support for Donors, Recipients & Administrators")
 
 # -------------------- SESSION STATE --------------------

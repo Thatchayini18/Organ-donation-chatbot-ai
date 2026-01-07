@@ -53,7 +53,7 @@ if user_input:
     # -------------------- AI RESPONSE --------------------
     with st.spinner("Thinking..."):
 
-        try:
+  try:
     messages = build_messages(system_prompt, st.session_state.messages)
 
     response = client.chat.completions.create(
@@ -65,8 +65,8 @@ if user_input:
 
     bot_reply = response.choices[0].message.content
 
-except Exception:
-    bot_reply = "⚠️ Sorry, the AI service is temporarily unavailable. Please try again."
+except Exception as e:
+    bot_reply = "⚠️ AI service error. Please try again later."
 
     # Store assistant reply
     st.session_state.messages.append({

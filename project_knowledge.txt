@@ -1,0 +1,15 @@
+This project focuses on improving the efficiency of organ donation systems.
+
+The system provides a unified platform where donors and recipients can register.
+
+Machine learning algorithms are used to prioritize critical patients based on urgency.
+
+Fake donor entries are detected using data validation and anomaly detection techniques.
+
+Automated donor-recipient matching ensures compatibility and reduces delays.
+
+Once a valid match is found, recipients are notified immediately via email.
+
+The platform includes modules such as registration, matching, dashboard, and admin control.
+
+The AI chatbot assists users by answering questions, guiding processes, and providing system clarity.

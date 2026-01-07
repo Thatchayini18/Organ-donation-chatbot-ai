@@ -1,6 +1,16 @@
 import streamlit as st
 from groq import Groq
 
+def build_messages(system_prompt, chat_history):
+    messages = [{"role": "system", "content": system_prompt}]
+    for msg in chat_history:
+        if msg.get("role") in ["user", "assistant"] and isinstance(msg.get("content"), str):
+            messages.append({
+                "role": msg["role"],
+                "content": msg["content"][:2000]
+            })
+    return messages
+
 # -------------------- PAGE CONFIG --------------------
 st.set_page_config(
     page_title="AI Organ Donation Chatbot",
@@ -42,26 +52,21 @@ if user_input:
 
     # -------------------- AI RESPONSE --------------------
     with st.spinner("Thinking..."):
-        response = client.chat.completions.create(
-            model="llama3-8b-8192",
-            messages=[
-                {
-                    "role": "system",
-                    "content": f"""
-You are a professional AI assistant for an organ donation system.
-Answer questions ONLY using the project information below.
-If the question is unrelated, politely guide the user.
 
-Project Information:
-{project_info}
-"""
-                },
-                *st.session_state.messages
-            ],
-            temperature=0.3
-        )
+        try:
+    messages = build_messages(system_prompt, st.session_state.messages)
 
-        bot_reply = response.choices[0].message.content
+    response = client.chat.completions.create(
+        model="llama3-8b-8192",
+        messages=messages,
+        temperature=0.3,
+        max_tokens=500
+    )
+
+    bot_reply = response.choices[0].message.content
+
+except Exception:
+    bot_reply = "⚠️ Sorry, the AI service is temporarily unavailable. Please try again."
 
     # Store assistant reply
     st.session_state.messages.append({

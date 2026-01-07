@@ -1,6 +1,7 @@
 import streamlit as st
 from groq import Groq
 
+# -------------------- HELPER FUNCTION --------------------
 def build_messages(system_prompt, chat_history):
     messages = [{"role": "system", "content": system_prompt}]
     for msg in chat_history:
@@ -24,8 +25,23 @@ client = Groq(api_key=st.secrets["GROQ_API_KEY"])
 with open("project_knowledge.txt", "r") as file:
     project_info = file.read()
 
+# -------------------- SYSTEM PROMPT --------------------
+system_prompt = f"""
+You are an AI assistant for an Organ Donation Management System.
+
+Your role:
+- Help users understand organ donation
+- Explain donor & recipient registration
+- Explain matching process & priority rules
+- Answer FAQs clearly and politely
+- Respond only based on the project information below
+
+Project Information:
+{project_info}
+"""
+
 # -------------------- UI HEADER --------------------
-st.title("AI-Powered Organ Donation Assistant")
+st.title("🫀 AI-Powered Organ Donation Assistant")
 st.caption("24×7 Intelligent Support for Donors, Recipients & Administrators")
 
 # -------------------- SESSION STATE --------------------
@@ -52,21 +68,20 @@ if user_input:
 
     # -------------------- AI RESPONSE --------------------
     with st.spinner("Thinking..."):
+        try:
+            messages = build_messages(system_prompt, st.session_state.messages)
 
-  try:
-    messages = build_messages(system_prompt, st.session_state.messages)
+            response = client.chat.completions.create(
+                model="llama3-8b-8192",
+                messages=messages,
+                temperature=0.3,
+                max_tokens=500
+            )
 
-    response = client.chat.completions.create(
-        model="llama3-8b-8192",
-        messages=messages,
-        temperature=0.3,
-        max_tokens=500
-    )
+            bot_reply = response.choices[0].message.content
 
-    bot_reply = response.choices[0].message.content
-
-except Exception as e:
-    bot_reply = "⚠️ AI service error. Please try again later."
+        except Exception:
+            bot_reply = "⚠️ AI service error. Please try again later."
 
     # Store assistant reply
     st.session_state.messages.append({
